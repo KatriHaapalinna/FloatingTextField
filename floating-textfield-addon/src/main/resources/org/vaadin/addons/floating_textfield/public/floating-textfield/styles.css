@@ -1,0 +1,35 @@
+:root {
+	--main-height: 45px;
+}
+input.floating-textfield {
+	height: var(--main-height) !important;
+	padding-top: calc(var(--main-height) * 0.35) !important;
+}
+div.floating-textfield-frame {
+	position: relative;
+	padding-left: 10px;
+	height: 1px;
+	cursor: text;
+}
+div.floating-textfield-placeholder {
+	position: absolute;
+	top: calc(var(--main-height) * 0.35);
+	font-size:11px;
+	-webkit-transition: top 0.3s;
+	transition: top 0.3s;
+}
+
+div.floating-textfield-placeholder-focus {
+	font-weight: bold;
+	top: 5px;
+}
+div.error-text {
+	font-weight: bold;
+	color: red;
+	top: 5px;
+}
+div.error {
+	font-weight: bold;
+	color: red;
+	top: calc(var(--main-height) * 0.35);
+}
