@@ -1,10 +1,6 @@
 # FloatingTextField Add-on for Vaadin 8
 
-${ComponentClassName} is a UI component add-on for Vaadin 8.
-
-## Online demo
-
-Try the add-on demo at <url of the online demo>
+FloatingTextField is a TextField add-on for Vaadin 8.
 
 ## Download release
 
@@ -12,7 +8,7 @@ Official releases of this add-on are available at Vaadin Directory. For Maven in
 
 ## Building and running demo
 
-git clone <url of the FloatingTextField repository>
+git clone https://github.com/KatriHaapalinna/FloatingTextField.git
 mvn clean install
 cd demo
 mvn jetty:run
@@ -57,9 +53,7 @@ Debugging client side code in the floating-textfield-demo project:
 
 ## Roadmap
 
-This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases. That said, the following features are planned for upcoming releases:
-- ...
-- ...
+This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases.
 
 ## Issue tracking
 
@@ -87,24 +81,11 @@ FloatingTextField is written by <...>
 
 Here is a simple example on how to try out the add-on component:
 
-<...>
+<code>String name;
+Binder<String> binder = new Binder<>();
+
+FloatingTextField simpleValidationFloater = new FloatingTextField();
+simpleValidationFloater.setPlaceholder("placeholder for name");
+binder.forField(simpleValidationFloater).withValidator(new StringLengthValidator("Name must be between 1 and 15 characters", 1, 15)).bind(s -> name, (s, v) -> name = v);</code>
 
 For a more comprehensive example, see src/test/java/org/vaadin/template/demo/DemoUI.java
-
-## Features
-
-### Feature A
-
-<...>
-
-### Feature B
-
-<...>
-
-### Feature C
-
-<...>
-
-## API
-
-FloatingTextField JavaDoc is available online at <...>
