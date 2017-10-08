@@ -1,9 +1,16 @@
 :root {
-	--main-height: 45px;
+	--main-height: 50px;
+	--placeholder-top: calc(var(--main-height, 50px) * 0.35);
+	--error-color: red;
+}
+div.floating-textfield-widget {
+	height: 50px;
+	height: var(--main-height);
 }
 input.floating-textfield {
-	height: var(--main-height) !important;
-	padding-top: calc(var(--main-height) * 0.35) !important;
+	height: inherit !important;
+	padding-top: calc(50px * 0.35) !important;
+	padding-top: var(--placeholder-top) !important;
 }
 div.floating-textfield-frame {
 	position: relative;
@@ -13,23 +20,30 @@ div.floating-textfield-frame {
 }
 div.floating-textfield-placeholder {
 	position: absolute;
-	top: calc(var(--main-height) * 0.35);
-	font-size:11px;
+	top: calc(50px * 0.35);
+	top: var(--placeholder-top);
+	font-size:12px;
 	-webkit-transition: top 0.3s;
+	-ms-transition: top 0.3s;
+	-moz-transition: top 0.3s;
+	-o-transition: top 0.3;
 	transition: top 0.3s;
 }
 
 div.floating-textfield-placeholder-focus {
 	font-weight: bold;
+	font-size:11px;
 	top: 5px;
 }
-div.error-text {
+div.placeholder-error-text {
 	font-weight: bold;
 	color: red;
+	color: var(--error-color, red);
 	top: 5px;
 }
-div.error {
-	font-weight: bold;
+div.placeholder-error {
 	color: red;
-	top: calc(var(--main-height) * 0.35);
+	color: var(--error-color, red);
+	top: 17px;
+	top: var(--placeholder-top);
 }

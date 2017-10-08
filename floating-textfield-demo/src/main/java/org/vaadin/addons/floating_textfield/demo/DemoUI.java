@@ -12,6 +12,8 @@ import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -30,28 +32,23 @@ public class DemoUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Binder<String> binder = new Binder<>();
-
+        FormLayout layout = new FormLayout();
         // FloatingTextField with placeholder
         final FloatingTextField field = new FloatingTextField("Default field");
 
         // FloatingTextField with binder and validator
         final FloatingTextField validationField = new FloatingTextField();
+        validationField.setRequiredIndicatorVisible(true);
         validationField.setPlaceholder("Name");
         validationField.addValueChangeListener(event -> {
             validationField.setHeight("50px");
         });
         binder.forField(validationField)
                 .withValidator(new StringLengthValidator(
-                        "Name must be within 1-10 letters", 1, 10))
+                        "Name must be between 1-10 letters", 1, 10))
                 .bind(s -> name, (s, v) -> name = v);
-        final VerticalLayout layout = new VerticalLayout();
-        layout.setStyleName("demoContentLayout");
-        layout.setSizeFull();
-        layout.setMargin(false);
-        layout.setSpacing(false);
+        layout.setMargin(true);
         layout.addComponents(field, validationField);
-        layout.setComponentAlignment(field, Alignment.BOTTOM_CENTER);
-        layout.setComponentAlignment(validationField, Alignment.TOP_CENTER);
         setContent(layout);
     }
 }

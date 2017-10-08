@@ -10,6 +10,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VLabel;
@@ -25,9 +27,9 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
     private static final String ERROR_CLASS = "v-textfield-error";
     FloatingTextFieldWidget widget;
     Element floatElement;
-    VLabel label;
+    VLabel placeholderLabel;
     Element parent;
-    Element captionElement;
+    Element placeholderElement;
     String placeholder;
     boolean fieldFocus = false;
     // ServerRpc is used to send events to server. Communication implementation
@@ -66,14 +68,14 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
             previousParent.replaceChild(parent, floatElement);
             parent.appendChild(floatElement);
         }
-        label.getElement().removeClassName("error-text");
-        label.getElement().removeClassName("error");
+        placeholderLabel.getElement().removeClassName("placeholder-error-text");
+        placeholderLabel.getElement().removeClassName("error");
 
         if (widget.getStyleName().contains(ERROR_CLASS)) {
             if ((currentFocus) || (!widget.getText().isEmpty())) {
-                label.getElement().addClassName("error-text");
+                placeholderLabel.getElement().addClassName("placeholder-error-text");
             } else if (widget.getText().isEmpty()) {
-                label.getElement().addClassName("error");
+                placeholderLabel.getElement().addClassName("placeholder-error");
             }
         }
         if (currentFocus) {
@@ -84,24 +86,24 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
     }
 
     private void addPlaceholder() {
-        placeholder = getState().pl;
+        placeholder = getState().floatingPlaceholder;
         parent = DOM.createDiv();
-        captionElement = DOM.createDiv();
-        label = new VLabel();
+        placeholderElement = DOM.createDiv();
+        placeholderLabel = new VLabel();
         widget.getElement().addClassName(CLASS_NAME);
         parent.addClassName("v-widget " + CLASS_NAME + "-widget");
-        captionElement.setAttribute("class", CLASS_NAME + "-frame");
+        placeholderElement.setAttribute("class", CLASS_NAME + "-frame");
 
         widget.addFocusHandler(new FocusHandler() {
 
             @Override
             public void onFocus(FocusEvent event) {
                 fieldFocus = true;
-                label.getElement()
+                placeholderLabel.getElement()
                         .addClassName(CLASS_NAME + "-placeholder-focus");
-                if (label.getStyleName().contains("error")) {
-                    label.getElement().removeClassName("error");
-                    label.getElement().addClassName("error-text");
+                if (placeholderLabel.getStyleName().contains("placeholder-error")) {
+                    placeholderLabel.getElement().removeClassName("placeholder-error");
+                    placeholderLabel.getElement().addClassName("placeholder-error-text");
                 }
             }
 
@@ -114,27 +116,31 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
                 if (widget.getText() != null && !widget.getText().isEmpty()) {
                     return;
                 } else if (widget.getStyleName().contains(ERROR_CLASS)) {
-                    label.getElement().addClassName("error");
+                    placeholderLabel.getElement().addClassName("placeholder-error");
                 }
-                label.getElement()
+                placeholderLabel.getElement()
                         .removeClassName(CLASS_NAME + "-placeholder-focus");
             }
 
         });
-        label.getElement().setClassName(CLASS_NAME + "-placeholder");
-        label.setText(placeholder);
-        captionElement.appendChild(label.getElement());
-        label.addClickHandler(new ClickHandler() {
-
+        
+        placeholderLabel.getElement().setClassName(CLASS_NAME + "-placeholder");
+        placeholderLabel.setText(placeholder);
+        placeholderElement.appendChild(placeholderLabel.getElement());
+        DOM.sinkEvents(placeholderLabel.getElement(), Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
+        DOM.setEventListener(placeholderLabel.getElement(), new EventListener() {
             @Override
-            public void onClick(ClickEvent event) {
-                alert("noted");
-                widget.setFocus(!fieldFocus);
-                fieldFocus = !fieldFocus;
+            public void onBrowserEvent(Event event) {
+                if (Event.ONCLICK == event.getTypeInt()) {
+                   if (fieldFocus) {
+                	   widget.getElement().blur();
+                   } else {
+                	   widget.getElement().focus();
+                   }
+                }
             }
-
         });
-        parent.appendChild(captionElement);
+        parent.appendChild(placeholderElement);
     }
 
     private static native void alert(String s) /*-{

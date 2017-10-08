@@ -25,17 +25,7 @@ public class FloatingTextField extends TextField {
      */
     public FloatingTextField(String placeholder) {
         super();
-        getState().pl = placeholder;
-    }
-
-    @Override
-    public void setHeight(String height) {
-        getState().mainHeight = height;
-    }
-
-    @Override
-    public void setHeight(float height, Unit unit) {
-
+        getState().floatingPlaceholder = placeholder;
     }
 
     /**
@@ -43,10 +33,9 @@ public class FloatingTextField extends TextField {
      */
     @Override
     public void setPlaceholder(String placeholder) {
-        getState().pl = placeholder;
+        getState().floatingPlaceholder = placeholder;
     }
 
-    // We must override getState() to cast the state to FloatingTextFieldState
     @Override
     protected FloatingTextFieldState getState() {
         return (FloatingTextFieldState) super.getState();
