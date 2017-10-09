@@ -18,9 +18,35 @@ $darkgreen: darken($green, 30%);
 		background-position: center center;
 		background-repeat: no-repeat;
 	}
-	
-	// You can also customize your component for the demo
-	// app, but remember that these styles are not part of
-	// the component. To include built-in CSS for your component,
-	// edit client/styles.css under java sources
+	.floatingTextFieldWidget {
+		height: 50px;
+		--main-height: 50px;
+		--placeholder-font-size: 12px;
+	}
+	.floatingTextFieldEdge {
+		// transition property does not work in Edge when the property transitioned uses calc() function at any point...
+		--placeholder-top: 17px;
+	}
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.demo {
+		/* IE10+ CSS styles go here */
+		.floating-textfield {
+			padding-top: calc(50px * 0.35);
+		}
+		.floating-textfield-placeholder {
+			// transition property does not work in IE when the property transitioned uses calc() function...
+			top: 17px;
+			font-size: 12px;
+		}
+		.floating-textfield-placeholder-focus {
+			font-size: calc(13px * 0.9);
+			top: 5px !important;
+		}
+		.placeholder-error {
+			top: 17px;
+		}
+	}
+			
 }

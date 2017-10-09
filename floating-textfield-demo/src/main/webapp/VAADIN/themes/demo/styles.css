@@ -14787,3 +14787,30 @@ div.v-layout.v-horizontal.v-widget {
 	background-position: center center;
 	background-repeat: no-repeat;
 }
+
+.demo .floatingTextFieldWidget {
+	height: 50px;
+	--main-height: 50px;
+	--placeholder-font-size: 12px;
+}
+
+.demo .floatingTextFieldEdge {
+	--placeholder-top: 17px;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	.demo .floating-textfield {
+		padding-top: calc(50px * 0.35);
+	}
+	.demo .floating-textfield-placeholder {
+		top: 17px;
+		font-size: 12px;
+	}
+	.demo .floating-textfield-placeholder-focus {
+		font-size: calc(13px * 0.9);
+		top: 5px !important;
+	}
+	.demo .placeholder-error {
+		top: 17px;
+	}
+}

@@ -4,4 +4,5 @@ import com.vaadin.shared.ui.textfield.TextFieldState;
 
 public class FloatingTextFieldState extends TextFieldState {
     public String floatingPlaceholder;
+    public boolean isEdge;
 }

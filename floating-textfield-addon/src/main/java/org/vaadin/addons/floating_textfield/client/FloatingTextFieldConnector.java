@@ -5,8 +5,6 @@ import org.vaadin.addons.floating_textfield.FloatingTextField;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
@@ -24,7 +22,13 @@ import com.vaadin.shared.ui.Connect;
 @Connect(FloatingTextField.class)
 public class FloatingTextFieldConnector extends TextFieldConnector {
     private static final String CLASS_NAME = "floating-textfield";
-    private static final String ERROR_CLASS = "v-textfield-error";
+    private static final String V_ERROR_CLASS = "v-textfield-error";
+    private String phLabel = CLASS_NAME + "-placeholder";
+    private String phFocus = CLASS_NAME + "-placeholder-focus";
+    private String phErrorText = "placeholder-error-text";
+    private String phError = "placeholder-error";
+    private static final String EDGE_CLASS = "floatingTextFieldEdge";
+    private boolean isEdge = false;
     FloatingTextFieldWidget widget;
     Element floatElement;
     VLabel placeholderLabel;
@@ -58,6 +62,7 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         if (widget == null) {
+            isEdge = getState().isEdge;
             widget = getWidget();
             floatElement = widget.getElement();
             addPlaceholder();
@@ -68,14 +73,14 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
             previousParent.replaceChild(parent, floatElement);
             parent.appendChild(floatElement);
         }
-        placeholderLabel.getElement().removeClassName("placeholder-error-text");
-        placeholderLabel.getElement().removeClassName("error");
+        placeholderLabel.getElement().removeClassName(phErrorText);
+        placeholderLabel.getElement().removeClassName(phError);
 
-        if (widget.getStyleName().contains(ERROR_CLASS)) {
+        if (widget.getStyleName().contains(V_ERROR_CLASS)) {
             if ((currentFocus) || (!widget.getText().isEmpty())) {
-                placeholderLabel.getElement().addClassName("placeholder-error-text");
+                placeholderLabel.getElement().addClassName(phErrorText);
             } else if (widget.getText().isEmpty()) {
-                placeholderLabel.getElement().addClassName("placeholder-error");
+                placeholderLabel.getElement().addClassName(phError);
             }
         }
         if (currentFocus) {
@@ -87,7 +92,9 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
 
     private void addPlaceholder() {
         placeholder = getState().floatingPlaceholder;
-        parent = DOM.createDiv();
+        VLabel parentContainer = new VLabel();
+        parentContainer.addStyleName("floatingTextFieldWidget");
+        parent = parentContainer.getElement();
         placeholderElement = DOM.createDiv();
         placeholderLabel = new VLabel();
         widget.getElement().addClassName(CLASS_NAME);
@@ -99,11 +106,10 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
             @Override
             public void onFocus(FocusEvent event) {
                 fieldFocus = true;
-                placeholderLabel.getElement()
-                        .addClassName(CLASS_NAME + "-placeholder-focus");
-                if (placeholderLabel.getStyleName().contains("placeholder-error")) {
-                    placeholderLabel.getElement().removeClassName("placeholder-error");
-                    placeholderLabel.getElement().addClassName("placeholder-error-text");
+                placeholderLabel.getElement().addClassName(phFocus);
+                if (placeholderLabel.getStyleName().contains(phError)) {
+                    placeholderLabel.getElement().removeClassName(phError);
+                    placeholderLabel.getElement().addClassName(phErrorText);
                 }
             }
 
@@ -115,36 +121,39 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
                 fieldFocus = false;
                 if (widget.getText() != null && !widget.getText().isEmpty()) {
                     return;
-                } else if (widget.getStyleName().contains(ERROR_CLASS)) {
-                    placeholderLabel.getElement().addClassName("placeholder-error");
+                } else if (widget.getStyleName().contains(V_ERROR_CLASS)) {
+                    placeholderLabel.getElement().addClassName(phError);
                 }
-                placeholderLabel.getElement()
-                        .removeClassName(CLASS_NAME + "-placeholder-focus");
+                placeholderLabel.getElement().removeClassName(phFocus);
             }
 
         });
-        
-        placeholderLabel.getElement().setClassName(CLASS_NAME + "-placeholder");
+
+        placeholderLabel.getElement().setClassName(phLabel);
+        if (isEdge) {
+            parent.addClassName(EDGE_CLASS);
+        }
         placeholderLabel.setText(placeholder);
         placeholderElement.appendChild(placeholderLabel.getElement());
-        DOM.sinkEvents(placeholderLabel.getElement(), Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
-        DOM.setEventListener(placeholderLabel.getElement(), new EventListener() {
-            @Override
-            public void onBrowserEvent(Event event) {
-                if (Event.ONCLICK == event.getTypeInt()) {
-                   if (fieldFocus) {
-                	   widget.getElement().blur();
-                   } else {
-                	   widget.getElement().focus();
-                   }
-                }
-            }
-        });
+        DOM.sinkEvents(placeholderLabel.getElement(),
+                Event.ONCLICK | Event.ONMOUSEOUT | Event.ONMOUSEOVER);
+        DOM.setEventListener(placeholderLabel.getElement(),
+                new EventListener() {
+                    @Override
+                    public void onBrowserEvent(Event event) {
+                        if (Event.ONCLICK == event.getTypeInt()) {
+                            if (fieldFocus) {
+                                widget.getElement().blur();
+                            } else {
+                                widget.getElement().focus();
+                            }
+                        }
+                    }
+                });
         parent.appendChild(placeholderElement);
     }
 
     private static native void alert(String s) /*-{
                                                alert(s);
                                                }-*/;
-
 }

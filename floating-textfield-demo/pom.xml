@@ -5,7 +5,7 @@
 	<groupId>org.vaadin.addons</groupId>
 	<artifactId>floating-textfield-demo</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-alpha1</version>
+	<version>2.0.0-alpha1</version>
 	<name>FloatingTextField Add-on Demo</name>
 
 	<prerequisites>
@@ -30,7 +30,7 @@
 	<scm>
 		<url>git://github.com/KatriHaapalinna/FloatingTextField.git</url>
 		<connection>scm:git:git://github.com/KatriHaapalinna/FloatingTextField.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/KatriHaapalinna/${componentClassName}.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com:/KatriHaapalinna/FloatingTextField.git</developerConnection>
 		<tag>FloatingTextField add-on for Vaadin</tag>
 	</scm>
 
