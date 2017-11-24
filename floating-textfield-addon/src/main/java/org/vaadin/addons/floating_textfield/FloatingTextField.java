@@ -4,19 +4,16 @@ import org.vaadin.addons.floating_textfield.client.FloatingTextFieldServerRpc;
 import org.vaadin.addons.floating_textfield.client.FloatingTextFieldState;
 
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 
-// This is the server-side UI component that provides public API
-// for FloatingTextField
 public class FloatingTextField extends TextField {
     private FloatingTextFieldServerRpc rpc = new FloatingTextFieldServerRpc() {
     };
 
     public FloatingTextField() {
         super();
-        registerRpc(rpc);
-        // To receive events from the client, we register ServerRpc
-        getState().isEdge = UI.getCurrent().getPage().getWebBrowser().isEdge();
+        setWidth("185px");
+        setHeight("55px");
+        // registerRpc(rpc);
     }
 
     /**
@@ -27,9 +24,10 @@ public class FloatingTextField extends TextField {
      */
     public FloatingTextField(String placeholder) {
         super();
-        registerRpc(rpc);
-        getState().isEdge = UI.getCurrent().getPage().getWebBrowser().isEdge();
-        getState().floatingPlaceholder = placeholder;
+        setHeight("55px");
+        setWidth("185px");
+        setPlaceholder(placeholder);
+        // registerRpc(rpc);
     }
 
     /**

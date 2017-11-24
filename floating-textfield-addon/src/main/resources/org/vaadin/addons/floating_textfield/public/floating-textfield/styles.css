@@ -1,80 +1,38 @@
 :root {
-	--main-height: 50px;
-	--placeholder-top: calc(var(--main-height, 50px) * 0.35);
-	--placeholder-top-edge: 17px;
 	--error-color: red;
 	--placeholder-font-size: 12px;
 }
-div.floating-textfield-widget {
-	height: 50px;
-	height: var(--main-height);
-	--placeholder-top: calc(var(--main-height, 50px) * 0.35);
+.floatingTextFieldWidget {
+	background-color: white;
+	border-radius: 4px;
 }
-input.floating-textfield {
-	height: inherit !important;
-	padding-top: calc(50px * 0.35) !important;
-	padding-top: var(--placeholder-top) !important;
-}
-div.floating-textfield-frame {
-	position: relative;
-	padding-left: 10px;
-	height: 1px;
-	cursor: text;
-}
-div.floating-textfield-placeholder {
+.floatingTextFieldWidget > .placeholderSpan {
 	position: absolute;
-	top: calc(50px * 0.35);
-	top: var(--placeholder-top);
-	font-size:12px;
+	cursor: text;	
+}
+.floatingTextFieldWidget > .floatingTextField {
+	padding-top: 19px;
+	position: relative;
+	z-index: 100;
+	background: transparent;
+}
+.floatingTextFieldWidget > .placeholderSpan > .placeholder {
+	position: relative;
+	font-size: 12px;
 	font-size: var(--placeholder-font-size);
-	-webkit-transition: top 0.3s;
-	-ms-transition: top 0.3s;
-	-moz-transition: top 0.3s;
-	-o-transition: top 0.3;
-	transition: top 0.3s;
+	top: 25%;
+	padding-left: 7px;
+	-webkit-transition: top 0.3s ease-out, font-size 0.3s ease-out;
+	-moz-transition: top 0.3s ease-out, font-size 0.3s ease-out;
+	-o-transition: top 0.3s ease-out, font-size 0.3s ease-out;
+	transition: top 0.3s ease-out, font-size 0.3s ease-out;
 }
-
-div.floating-textfield-placeholder-focus {
+.floatingTextFieldWidgetFocused > .placeholderSpan > .placeholder {
+	top: 0px !important;
 	font-weight: bold;
-	font-size: 11px;
-	font-size: calc(var(--placeholder-font-size) * 0.9);
-	top: 5px;
 }
-div.placeholder-error-text {
+.floatingTextFieldWidgetError > .placeholderSpan > .placeholder {
 	font-weight: bold;
 	color: red;
-	color: var(--error-color, red);
-	top: 5px;
-}
-div.placeholder-error {
-	color: red;
-	color: var(--error-color, red);
-	top: 17px;
-	top: var(--placeholder-top);
-}
-div.floatingTextFieldEdge {
-	.floating-textfield-placeholder {
-		top: var(--placeholder-top-edge);
-	}
-	.placeholder-error {
-		top: var(--placeholder-top-edge);
-	}
-}
-
-@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-		/* IE10+ CSS styles go here */
-	input.floating-textfield {
-		padding-top: calc(50px * 0.35);
-	}
-	div.floating-textfield-placeholder {
-		top: 17px;
-		font-size: 12px;
-	}
-	div.floating-textfield-placeholder-focus {
-		font-size: calc(12px * 0.9);
-		top: 5px !important;
-	}
-	div.placeholder-error {
-		top: 17px;
-	}
+	color: var(--error-color);
 }
