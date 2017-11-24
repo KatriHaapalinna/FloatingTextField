@@ -4,7 +4,7 @@ FloatingTextField is a TextField add-on for Vaadin 8.
 
 ## Download release
 
-Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to http://vaadin.com/addon/floating-textfield
+Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to https://vaadin.com/directory/component/floatingtextfield-add-on
 
 ## Building and running demo
 
@@ -47,9 +47,11 @@ Debugging client side code in the floating-textfield-demo project:
  
 ## Release notes
 
-### Version 0.0.1-alpha1
-- ...
-- ...
+### Version 2.0.0-beta1
+- Fixes issue with TabSheet (#1)
+- Fixes issue with sizing being difficult to manage
+- Major simplifications to styling
+- Major style name changes for better readability
 
 ## Roadmap
 
@@ -73,19 +75,21 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-FloatingTextField is written by <...>
+FloatingTextField is written by Katri Haapalinna
 
 # Developer Guide
 
 ## Getting started
 
-Here is a simple example on how to try out the add-on component:
+Here is a simple example on how to try out the add-on component (with binding):
 
-<code>String name;
-Binder<String> binder = new Binder<>();
+    String name;
+    Binder<String> binder = new Binder<>();
 
-FloatingTextField simpleValidationFloater = new FloatingTextField();
-simpleValidationFloater.setPlaceholder("placeholder for name");
-binder.forField(simpleValidationFloater).withValidator(new StringLengthValidator("Name must be between 1 and 15 characters", 1, 15)).bind(s -> name, (s, v) -> name = v);</code>
+    FloatingTextField simpleValidationFloater = new FloatingTextField();
+    simpleValidationFloater.setPlaceholder("placeholder for name");
+    binder.forField(simpleValidationFloater).withValidator(
+        new StringLengthValidator("Name must be between 1 and 15 characters", 1,15))
+        .bind(s -> name, (s, v) -> name = v);
 
 For a more comprehensive example, see src/test/java/org/vaadin/template/demo/DemoUI.java
