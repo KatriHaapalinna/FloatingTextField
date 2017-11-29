@@ -13,7 +13,7 @@ public class FloatingTextField extends TextField {
         super();
         setWidth("185px");
         setHeight("55px");
-        // registerRpc(rpc);
+        registerRpc(rpc);
     }
 
     /**
@@ -27,7 +27,12 @@ public class FloatingTextField extends TextField {
         setHeight("55px");
         setWidth("185px");
         setPlaceholder(placeholder);
-        // registerRpc(rpc);
+        registerRpc(rpc);
+    }
+
+    @Override
+    public String getPlaceholder() {
+        return getState().floatingPlaceholder;
     }
 
     /**

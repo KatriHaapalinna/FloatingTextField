@@ -3,10 +3,6 @@ package org.vaadin.addons.floating_textfield.client;
 import org.vaadin.addons.floating_textfield.FloatingTextField;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.BlurEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -26,63 +22,40 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
     Element placeholderSpan;
     Element placeholderSpanContent;
     String placeholder;
-    String contentText;
-    boolean hasFocusOrContent = false;
     FloatingTextFieldServerRpc rpc = RpcProxy
             .create(FloatingTextFieldServerRpc.class, this);
 
     public FloatingTextFieldConnector() {
         widget = getWidget();
+        widgetElement = widget.getElement();
+        if (!widgetElement.getClassName().contains("floatingTextField")) {
+            addFocusHandler(widgetElement);
+        }
+        widgetElement.addClassName("floatingTextField");
+
         parentContainer = DOM.createDiv();
         placeholderSpan = DOM.createSpan();
         placeholderSpanContent = DOM.createSpan();
+
         placeholderSpan.addClassName("placeholderSpan");
         parentContainer.addClassName("v-widget floatingTextFieldWidget");
+        placeholderSpanContent.setClassName("placeholder");
+
         parentContainer.appendChild(placeholderSpan);
         placeholderSpan.setClassName(phLabel);
-        placeholderSpanContent.setClassName("placeholder");
         placeholderSpan.appendChild(placeholderSpanContent);
-        if ((getWidget().getText() != null && !getWidget().getText().isEmpty())
-                || getWidget().getElement().getClassName()
-                        .contains(V_FOCUS_CLASS)) {
-            hasFocusOrContent = true;
+
+        if (hasFocusOrText(widget.getElement())) {
             parentContainer.addClassName(widgetFocus);
         }
-
-        widget.addFocusHandler(new FocusHandler() {
-
-            @Override
-            public void onFocus(FocusEvent event) {
-                parentContainer.addClassName(widgetFocus);
-                hasFocusOrContent = true;
-            }
-
-        });
-        widget.addBlurHandler(new BlurHandler() {
-
-            @Override
-            public void onBlur(BlurEvent event) {
-                if (hasFocusOrContent) {
-                    if (getWidget().getText() != null
-                            && !getWidget().getText().isEmpty()) {
-                        hasFocusOrContent = true;
-                        return;
-                    } else if (getWidget().getStyleName()
-                            .contains(V_ERROR_CLASS)) {
-                        parentContainer.addClassName(widgetError);
-                    }
-                    hasFocusOrContent = false;
-                    parentContainer.removeClassName(widgetFocus);
-                }
-            }
-
-        });
+        if (getWidget().getStyleName().contains(V_ERROR_CLASS)) {
+            parentContainer.addClassName(widgetError);
+        }
         parentContainer.getStyle().setProperty("width", getState().width);
         parentContainer.getStyle().setProperty("height", getState().height);
         placeholderSpan.getStyle().setProperty("height", getState().height);
-        getWidget().getElement().getStyle().setProperty("padding-top",
-                "calc(" + getState().height + " * 0.35)");
-
+        placeholderSpanContent.getStyle().setProperty("max-width",
+                "calc(" + getState().width + " - 5px)");
     }
 
     @Override
@@ -98,44 +71,71 @@ public class FloatingTextFieldConnector extends TextFieldConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        if ((getWidget().getText() != null && !getWidget().getText().isEmpty())
-                || getWidget().getElement().getClassName()
-                        .contains(V_FOCUS_CLASS)) {
-            hasFocusOrContent = true;
+
+        if (hasFocusOrText(widget.getElement())) {
             parentContainer.addClassName(widgetFocus);
         }
+
+        if (widget.getStyleName().contains(V_ERROR_CLASS)) {
+            parentContainer.addClassName(widgetError);
+        } else {
+            parentContainer.removeClassName(widgetError);
+        }
+
         if (stateChangeEvent.hasPropertyChanged("height")
                 && getState().height != null && !getState().height.isEmpty()) {
             parentContainer.getStyle().setProperty("height", getState().height);
             placeholderSpan.getStyle().setProperty("height", getState().height);
-            getWidget().getElement().getStyle().setProperty("padding-top",
-                    "calc(" + getState().height + " * 0.35)");
         }
         if (stateChangeEvent.hasPropertyChanged("width")
                 && getState().width != null && !getState().width.isEmpty()) {
             parentContainer.getStyle().setProperty("width", getState().width);
+            placeholderSpanContent.getStyle().setProperty("max-width",
+                    "calc(" + getState().width + " - 5px)");
         }
-        placeholder = getState().floatingPlaceholder;
-        if (placeholder == null) {
-            return;
-        } else {
-            placeholderSpanContent.setInnerText(placeholder);
-        }
-        widget = getWidget();
-        widgetElement = widget.getElement();
-        widgetElement.addClassName("floatingTextField");
-
-        contentText = widget.getText();
 
         Element previousParent = widgetElement.getParentElement();
         if (!previousParent.isOrHasChild(parentContainer)) {
             previousParent.replaceChild(parentContainer, widgetElement);
             parentContainer.appendChild(widgetElement);
         }
-        parentContainer.removeClassName(widgetError);
-
-        if (widget.getStyleName().contains(V_ERROR_CLASS)) {
-            parentContainer.addClassName(widgetError);
+        placeholder = getState().floatingPlaceholder;
+        if (placeholder != null) {
+            placeholderSpanContent.setInnerText(placeholder);
         }
     }
+
+    private void focused() {
+        parentContainer.addClassName(widgetFocus);
+    }
+
+    private void blurred() {
+        if (hasFocusOrText(widget.getElement())) {
+            return;
+        }
+        parentContainer.removeClassName(widgetFocus);
+    }
+
+    public final native void addFocusHandler(Element el)
+    /*-{
+        var self = this;
+        el.addEventListener("focus", function () {
+            self.@org.vaadin.addons.floating_textfield.client.FloatingTextFieldConnector::focused()();
+        });
+        el.addEventListener("blur", function () {
+              self.@org.vaadin.addons.floating_textfield.client.FloatingTextFieldConnector::blurred()();
+        });
+    }-*/;
+
+    public final native boolean hasFocusOrText(Element el)
+    /*-{
+        var s = el.value;
+        if (Boolean(s)) {
+            return true;
+        }
+        if (el === document.activeElement) {
+            return true;
+        }
+        return false;
+    }-*/;
 }
