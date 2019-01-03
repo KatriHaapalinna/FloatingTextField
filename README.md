@@ -1,3 +1,6 @@
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/floatingtextfield-add-on)
+[![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/floatingtextfield-add-on.svg)](https://vaadin.com/directory/component/floatingtextfield-add-on)
+
 # FloatingTextField Add-on for Vaadin 8
 
 FloatingTextField is a TextField add-on for Vaadin 8.
